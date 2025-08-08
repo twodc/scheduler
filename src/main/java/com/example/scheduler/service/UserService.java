@@ -1,5 +1,6 @@
 package com.example.scheduler.service;
 
+import com.example.scheduler.common.PasswordEncoder;
 import com.example.scheduler.dto.UpdateUserRequest;
 import com.example.scheduler.dto.UserResponse;
 import com.example.scheduler.entity.User;
@@ -17,10 +18,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse signUp(String username, String email, String password) {
-        User user = new User(username, email, password);
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(username, email, encodedPassword);
         userRepository.save(user);
         return UserResponse.from(user);
     }
@@ -50,8 +53,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User login(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password).orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 틀렸습니다."));
+    public User login(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 이메일입니다."));
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        }
+        return user;
     }
 }
