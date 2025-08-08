@@ -5,6 +5,7 @@ import com.example.scheduler.entity.User;
 import com.example.scheduler.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,14 @@ public class UserController {
 
     // 회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signUp(@RequestBody SignUpRequest request) {
+    public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest request) {
         UserResponse userResponse = userService.signUp(request.username(), request.email(), request.password());
         return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request,
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request,
                       HttpServletRequest httpRequest) {
         User user = userService.login(request.email(), request.password());
         HttpSession session = httpRequest.getSession();
@@ -58,11 +59,11 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
-    // 유저 이름 변경
-    @PutMapping("/{id}")
+    // 유저명 변경
+    @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> update(
             @PathVariable Long id,
-            @RequestBody UpdateUserRequest request
+            @Valid @RequestBody UpdateUserRequest request
     ) {
         return new ResponseEntity<>(userService.update(id, request), HttpStatus.OK);
     }
