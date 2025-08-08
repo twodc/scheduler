@@ -24,8 +24,8 @@ public class ScheduleController {
     // 일정 생성
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody CreateScheduleRequest request) {
-        User user = userRepository.findByIdOrElseThrow(request.getUserId());
-        ScheduleResponse schedule = scheduleService.createSchedule(request.getTitle(), request.getContent(), user);
+        User user = userRepository.findByIdOrElseThrow(request.userId());
+        ScheduleResponse schedule = scheduleService.createSchedule(request.title(), request.content(), user);
         return new ResponseEntity<>(schedule, HttpStatus.CREATED);
     }
 

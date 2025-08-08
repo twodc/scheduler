@@ -38,7 +38,7 @@ public class ScheduleService {
     @Transactional
     public ScheduleResponse update(Long id, UpdateScheduleRequest request) {
         Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);
-        findSchedule.updateSchedule(request.getTitle(), request.getContent());
+        findSchedule.updateSchedule(request.title(), request.content());
         return ScheduleResponse.from(findSchedule);
     }
 

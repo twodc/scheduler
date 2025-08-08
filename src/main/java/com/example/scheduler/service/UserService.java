@@ -5,8 +5,10 @@ import com.example.scheduler.dto.UserResponse;
 import com.example.scheduler.entity.User;
 import com.example.scheduler.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class UserService {
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
         User findUser = userRepository.findByIdOrElseThrow(id);
-        findUser.updateUser(request.getUsername());
+        findUser.updateUser(request.username());
         return UserResponse.from(findUser);
     }
 
@@ -47,4 +49,9 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
+    @Transactional(readOnly = true)
+    public User login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password).orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 틀렸습니다."));
+    }
 }
