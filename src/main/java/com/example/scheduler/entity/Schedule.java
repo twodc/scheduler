@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "schedule")
@@ -22,6 +24,9 @@ public class Schedule extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "schedule") // Comment 엔티티에 있는 schedule 필드를 의미한다.
+    private List<Comment> comments;
 
     public Schedule(String title, String content, User user) {
         this.title = title;
