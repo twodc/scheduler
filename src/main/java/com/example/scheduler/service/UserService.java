@@ -24,8 +24,8 @@ public class UserService {
     public UserResponse signUp(String username, String email, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, email, encodedPassword);
-        userRepository.save(user);
-        return UserResponse.from(user);
+        User savedUser = userRepository.save(user);
+        return UserResponse.from(savedUser);
     }
 
     @Transactional(readOnly = true)

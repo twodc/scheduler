@@ -1,10 +1,12 @@
 package com.example.scheduler.dto;
 
 import com.example.scheduler.entity.Schedule;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record ScheduleResponse(
         Long id,
         String title,
