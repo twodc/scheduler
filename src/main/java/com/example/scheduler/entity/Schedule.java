@@ -21,11 +21,11 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "schedule") // Comment 엔티티에 있는 schedule 필드를 의미한다.
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     public Schedule(String title, String content, User user) {
