@@ -1,0 +1,13 @@
+package com.example.scheduler.comment.repository;
+
+import com.example.scheduler.comment.entity.Comment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    default Comment findByIdOrElseThrow(Long id) {
+        return findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다. ID: " + id));
+    }
+}
