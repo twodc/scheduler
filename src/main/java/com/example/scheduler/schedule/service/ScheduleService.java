@@ -1,15 +1,16 @@
-package com.example.scheduler.service;
+package com.example.scheduler.schedule.service;
 
-import com.example.scheduler.dto.ScheduleResponse;
-import com.example.scheduler.dto.UpdateScheduleRequest;
-import com.example.scheduler.entity.Schedule;
-import com.example.scheduler.entity.User;
-import com.example.scheduler.repository.ScheduleRepository;
+import com.example.scheduler.schedule.dto.ScheduleResponse;
+import com.example.scheduler.schedule.dto.SchedulesResponse;
+import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
+import com.example.scheduler.schedule.entity.Schedule;
+import com.example.scheduler.user.entity.User;
+import com.example.scheduler.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponse> findAll() {
-        return scheduleRepository.findAll().stream().map(ScheduleResponse::from).toList();
+    public Page<SchedulesResponse> findAllPaged(Pageable pageable) {
+        return scheduleRepository.findAll(pageable).map(SchedulesResponse::from);
     }
 
     @Transactional(readOnly = true)

@@ -1,13 +1,18 @@
-package com.example.scheduler.controller;
+package com.example.scheduler.schedule.controller;
 
-import com.example.scheduler.dto.CreateScheduleRequest;
-import com.example.scheduler.dto.ScheduleResponse;
-import com.example.scheduler.dto.UpdateScheduleRequest;
-import com.example.scheduler.entity.User;
-import com.example.scheduler.repository.UserRepository;
-import com.example.scheduler.service.ScheduleService;
+import com.example.scheduler.schedule.dto.CreateScheduleRequest;
+import com.example.scheduler.schedule.dto.ScheduleResponse;
+import com.example.scheduler.schedule.dto.SchedulesResponse;
+import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
+import com.example.scheduler.user.entity.User;
+import com.example.scheduler.user.repository.UserRepository;
+import com.example.scheduler.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +38,19 @@ public class ScheduleController {
 
     // 일정 목록 조회
     @GetMapping
-    public ResponseEntity<List<ScheduleResponse>> findAll() {
-        List<ScheduleResponse> schedules = scheduleService.findAll();
+    public ResponseEntity<List<SchedulesResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedAt"));
+        Page<SchedulesResponse> pages = scheduleService.findAllPaged(pageable);
+        List<SchedulesResponse> schedules = pages.getContent(); // 페이징된 내용만 추출
         return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
     // 일정 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponse> getById(@PathVariable Long id) {
         ScheduleResponse findSchedule = scheduleService.findById(id);
         return new ResponseEntity<>(findSchedule, HttpStatus.OK);
     }
