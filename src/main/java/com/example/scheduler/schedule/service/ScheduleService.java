@@ -1,11 +1,13 @@
 package com.example.scheduler.schedule.service;
 
+import com.example.scheduler.schedule.dto.CreateScheduleRequest;
 import com.example.scheduler.schedule.dto.ScheduleResponse;
 import com.example.scheduler.schedule.dto.SchedulesResponse;
 import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
 import com.example.scheduler.schedule.entity.Schedule;
 import com.example.scheduler.user.entity.User;
 import com.example.scheduler.schedule.repository.ScheduleRepository;
+import com.example.scheduler.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleResponse createSchedule(String title, String content, User user) {
-        Schedule schedule = new Schedule(title, content, user);
+    public ScheduleResponse createSchedule(CreateScheduleRequest request) {
+        User user = userRepository.findByIdOrElseThrow(request.userId());
+        Schedule schedule = new Schedule(request.title(), request.content(), user);
         Schedule createdSchedule = scheduleRepository.save(schedule);
         return ScheduleResponse.from(createdSchedule);
     }

@@ -1,6 +1,8 @@
 package com.example.scheduler.user.service;
 
 import com.example.scheduler.global.config.PasswordEncoder;
+import com.example.scheduler.user.dto.LoginRequest;
+import com.example.scheduler.user.dto.SignUpRequest;
 import com.example.scheduler.user.dto.UpdateUserRequest;
 import com.example.scheduler.user.dto.UserResponse;
 import com.example.scheduler.user.entity.User;
@@ -21,9 +23,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse signUp(String username, String email, String password) {
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(username, email, encodedPassword);
+    public UserResponse signUp(SignUpRequest request) {
+        String encodedPassword = passwordEncoder.encode(request.password());
+        User user = new User(request.username(), request.email(), encodedPassword);
         User savedUser = userRepository.save(user);
         return UserResponse.from(savedUser);
     }
@@ -53,11 +55,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User login(String email, String rawPassword) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 이메일입니다."));
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+    public User login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.email());
+        if (user == null || !passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다.");
         }
         return user;
     }

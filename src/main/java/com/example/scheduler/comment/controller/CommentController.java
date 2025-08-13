@@ -25,19 +25,19 @@ public class CommentController {
             @Valid @RequestBody CreateCommentRequest request
             ) {
         CommentResponse comment = commentService.createComment(scheduleId, request);
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
     // 전체 댓글 조회
     @GetMapping("/comments")
     public ResponseEntity<List<CommentResponse>> findAll() {
-        return new ResponseEntity<>(commentService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(commentService.findAll());
     }
 
     // 개별 댓글 조회
     @GetMapping("/comments/{id}")
     public ResponseEntity<CommentResponse> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(commentService.findById(id), HttpStatus.OK);
+        return ResponseEntity.ok(commentService.findById(id));
     }
 
     // 댓글 수정
@@ -46,14 +46,14 @@ public class CommentController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateCommentRequest request
     ) {
-        return new ResponseEntity<>(commentService.update(id, request), HttpStatus.OK);
+        return ResponseEntity.ok(commentService.update(id, request));
     }
 
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         commentService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
 }

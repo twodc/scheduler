@@ -4,8 +4,6 @@ import com.example.scheduler.schedule.dto.CreateScheduleRequest;
 import com.example.scheduler.schedule.dto.ScheduleResponse;
 import com.example.scheduler.schedule.dto.SchedulesResponse;
 import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
-import com.example.scheduler.user.entity.User;
-import com.example.scheduler.user.repository.UserRepository;
 import com.example.scheduler.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +23,13 @@ import java.util.List;
 @RequestMapping("/schedules")
 public class ScheduleController {
 
-    private final UserRepository userRepository;
     private final ScheduleService scheduleService;
 
     // 일정 생성
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody CreateScheduleRequest request) {
-        User user = userRepository.findByIdOrElseThrow(request.userId());
-        ScheduleResponse schedule = scheduleService.createSchedule(request.title(), request.content(), user);
-        return new ResponseEntity<>(schedule, HttpStatus.CREATED);
+        ScheduleResponse schedule = scheduleService.createSchedule(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(schedule);
     }
 
     // 일정 목록 조회
@@ -45,14 +41,14 @@ public class ScheduleController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedAt"));
         Page<SchedulesResponse> pages = scheduleService.findAllPaged(pageable);
         List<SchedulesResponse> schedules = pages.getContent(); // 페이징된 내용만 추출
-        return new ResponseEntity<>(schedules, HttpStatus.OK);
+        return ResponseEntity.ok(schedules);
     }
 
     // 일정 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponse> getById(@PathVariable Long id) {
         ScheduleResponse findSchedule = scheduleService.findById(id);
-        return new ResponseEntity<>(findSchedule, HttpStatus.OK);
+        return ResponseEntity.ok(findSchedule);
     }
 
     // 일정 수정 (제목 or 내용)
@@ -66,13 +62,13 @@ public class ScheduleController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정할 항목을 하나 이상 입력해주세요!");
         }
         ScheduleResponse updatedSchedule = scheduleService.update(id, request);
-        return new ResponseEntity<>(updatedSchedule, HttpStatus.OK);
+        return ResponseEntity.ok(updatedSchedule);
     }
 
     // 일정 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         scheduleService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 }

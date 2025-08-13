@@ -26,7 +26,7 @@ public class UserController {
     // 회원 가입
     @PostMapping("/signup")
     public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest request) {
-        UserResponse userResponse = userService.signUp(request.username(), request.email(), request.password());
+        UserResponse userResponse = userService.signUp(request);
         return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request,
                       HttpServletRequest httpRequest) {
-        User user = userService.login(request.email(), request.password());
+        User user = userService.login(request);
         HttpSession session = httpRequest.getSession();
         session.setAttribute("LOGIN_USER", user.getId());
         return ResponseEntity.ok("로그인 되었습니다.");
@@ -53,13 +53,13 @@ public class UserController {
     // 모든 유저 조회
     @GetMapping
     public ResponseEntity<List<UserResponse>> findAll() {
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(userService.findAll());
     }
 
     // 개별 유저 조회
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     // 유저명 변경
@@ -68,14 +68,14 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request
     ) {
-        return new ResponseEntity<>(userService.update(id, request), HttpStatus.OK);
+        return ResponseEntity.ok(userService.update(id, request));
     }
 
     // 회원 탈퇴
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
 }
