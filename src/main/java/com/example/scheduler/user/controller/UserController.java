@@ -1,5 +1,6 @@
 package com.example.scheduler.user.controller;
 
+import com.example.scheduler.global.consts.Const;
 import com.example.scheduler.user.dto.LoginRequest;
 import com.example.scheduler.user.dto.SignUpRequest;
 import com.example.scheduler.user.dto.UpdateUserRequest;
@@ -36,7 +37,7 @@ public class UserController {
                       HttpServletRequest httpRequest) {
         User user = userService.login(request);
         HttpSession session = httpRequest.getSession();
-        session.setAttribute("LOGIN_USER", user.getId());
+        session.setAttribute(Const.LOGIN_USER, user.getId());
         return ResponseEntity.ok("로그인 되었습니다.");
     }
 

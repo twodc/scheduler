@@ -2,10 +2,7 @@ package com.example.scheduler.schedule.controller;
 
 import com.example.scheduler.global.exception.CustomException;
 import com.example.scheduler.global.exception.ErrorCode;
-import com.example.scheduler.schedule.dto.CreateScheduleRequest;
-import com.example.scheduler.schedule.dto.ScheduleResponse;
-import com.example.scheduler.schedule.dto.SchedulesResponse;
-import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
+import com.example.scheduler.schedule.dto.*;
 import com.example.scheduler.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +41,8 @@ public class ScheduleController {
 
     // 일정 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> getById(@PathVariable Long id) {
-        ScheduleResponse findSchedule = scheduleService.findById(id);
+    public ResponseEntity<ScheduleWithCommentResponse> getById(@PathVariable Long id) {
+        ScheduleWithCommentResponse findSchedule = scheduleService.findById(id);
         return ResponseEntity.ok(findSchedule);
     }
 

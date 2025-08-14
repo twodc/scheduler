@@ -1,9 +1,8 @@
 package com.example.scheduler.schedule.service;
 
-import com.example.scheduler.schedule.dto.CreateScheduleRequest;
-import com.example.scheduler.schedule.dto.ScheduleResponse;
-import com.example.scheduler.schedule.dto.SchedulesResponse;
-import com.example.scheduler.schedule.dto.UpdateScheduleRequest;
+import com.example.scheduler.comment.dto.SimpleCommentResponse;
+import com.example.scheduler.comment.repository.CommentRepository;
+import com.example.scheduler.schedule.dto.*;
 import com.example.scheduler.schedule.entity.Schedule;
 import com.example.scheduler.user.entity.User;
 import com.example.scheduler.schedule.repository.ScheduleRepository;
@@ -14,12 +13,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ScheduleResponse createSchedule(CreateScheduleRequest request) {
@@ -35,9 +37,13 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public ScheduleResponse findById(Long id) {
+    public ScheduleWithCommentResponse findById(Long id) {
         Schedule findSchedule = scheduleRepository.findByIdOrElseThrow(id);
-        return ScheduleResponse.from(findSchedule);
+        List<SimpleCommentResponse> comments = commentRepository.findByScheduleId(id)
+                .stream()
+                .map(SimpleCommentResponse::from)
+                .toList();
+        return ScheduleWithCommentResponse.from(findSchedule, comments);
     }
 
     @Transactional
