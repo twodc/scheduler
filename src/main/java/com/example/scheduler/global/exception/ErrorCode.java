@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    // 공통
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다."),
+
     // 유저
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "해당 사용자를 찾을 수 없습니다."),
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "U002", "이메일 또는 비밀번호가 일치하지 않습니다."),
