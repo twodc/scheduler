@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "schedule")
 @NoArgsConstructor
 public class Schedule extends BaseEntity {
 

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "user")
 @NoArgsConstructor
 public class User extends BaseEntity {
 
