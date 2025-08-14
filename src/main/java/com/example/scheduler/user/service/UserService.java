@@ -1,9 +1,8 @@
 package com.example.scheduler.user.service;
 
-import com.example.scheduler.global.config.PasswordEncoder;
+import com.example.scheduler.auth.security.PasswordEncoder;
 import com.example.scheduler.global.exception.CustomException;
 import com.example.scheduler.global.exception.ErrorCode;
-import com.example.scheduler.user.dto.LoginRequest;
 import com.example.scheduler.user.dto.SignUpRequest;
 import com.example.scheduler.user.dto.UpdateUserRequest;
 import com.example.scheduler.user.dto.UserResponse;
@@ -57,12 +56,4 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
-    @Transactional(readOnly = true)
-    public User login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email());
-        if (user == null || !passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new CustomException(ErrorCode.LOGIN_FAILED);
-        }
-        return user;
-    }
 }

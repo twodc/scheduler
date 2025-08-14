@@ -1,4 +1,4 @@
-package com.example.scheduler.global.config;
+package com.example.scheduler.auth.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;

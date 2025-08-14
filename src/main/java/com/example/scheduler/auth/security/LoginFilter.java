@@ -1,6 +1,6 @@
-package com.example.scheduler.global.security;
+package com.example.scheduler.auth.security;
 
-import com.example.scheduler.global.consts.Const;
+import com.example.scheduler.auth.consts.Const;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

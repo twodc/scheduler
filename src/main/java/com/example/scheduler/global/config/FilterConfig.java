@@ -1,6 +1,6 @@
 package com.example.scheduler.global.config;
 
-import com.example.scheduler.global.security.LoginFilter;
+import com.example.scheduler.auth.security.LoginFilter;
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

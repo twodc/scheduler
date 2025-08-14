@@ -21,10 +21,11 @@ Spring Boot 기반의 일정 관리 애플리케이션입니다.
 
 ## 프로젝트 구조
 src/main/java/com/example/scheduler  
+├── auth # 로그인, 로그아웃, 인증 관련 기능  
 ├── comment # 댓글 관련 기능  
 ├── schedule # 일정 관련 기능  
 ├── user # 사용자 관련 기능  
-├── global # 전역 설정, 예외 처리, 보안 필터  
+├── global # 전역 설정, 예외 처리  
 └── SchedulerApplication.java 
 
 ## API 명세서
