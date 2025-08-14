@@ -1,13 +1,13 @@
 package com.example.scheduler.schedule.repository;
 
+import com.example.scheduler.global.exception.CustomException;
+import com.example.scheduler.global.exception.ErrorCode;
 import com.example.scheduler.schedule.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     default Schedule findByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다. ID: " + id));
+                () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND));
     }
 }

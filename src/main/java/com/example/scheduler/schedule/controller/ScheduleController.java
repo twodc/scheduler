@@ -1,5 +1,7 @@
 package com.example.scheduler.schedule.controller;
 
+import com.example.scheduler.global.exception.CustomException;
+import com.example.scheduler.global.exception.ErrorCode;
 import com.example.scheduler.schedule.dto.CreateScheduleRequest;
 import com.example.scheduler.schedule.dto.ScheduleResponse;
 import com.example.scheduler.schedule.dto.SchedulesResponse;
@@ -14,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ScheduleController {
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedAt"));
         Page<SchedulesResponse> pages = scheduleService.findAllPaged(pageable);
-        List<SchedulesResponse> schedules = pages.getContent(); // 페이징된 내용만 추출
+        List<SchedulesResponse> schedules = pages.getContent();
         return ResponseEntity.ok(schedules);
     }
 
@@ -59,7 +60,7 @@ public class ScheduleController {
             ) {
         if ((request.title() == null || request.title().isBlank()) &&
             (request.content() == null || request.content().isBlank())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정할 항목을 하나 이상 입력해주세요!");
+            throw new CustomException(ErrorCode.INVALID_SCHEDULE_UPDATE);
         }
         ScheduleResponse updatedSchedule = scheduleService.update(id, request);
         return ResponseEntity.ok(updatedSchedule);

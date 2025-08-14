@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
                 .getDefaultMessage();
         return ResponseEntity.badRequest().body(errorMessage);
     }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomException(CustomException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body("[" + errorCode.getCode() + "] " + errorCode.getMessage());
+    }
+
 }

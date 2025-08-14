@@ -1,6 +1,8 @@
 package com.example.scheduler.user.service;
 
 import com.example.scheduler.global.config.PasswordEncoder;
+import com.example.scheduler.global.exception.CustomException;
+import com.example.scheduler.global.exception.ErrorCode;
 import com.example.scheduler.user.dto.LoginRequest;
 import com.example.scheduler.user.dto.SignUpRequest;
 import com.example.scheduler.user.dto.UpdateUserRequest;
@@ -8,10 +10,8 @@ import com.example.scheduler.user.dto.UserResponse;
 import com.example.scheduler.user.entity.User;
 import com.example.scheduler.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,6 +24,9 @@ public class UserService {
 
     @Transactional
     public UserResponse signUp(SignUpRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = new User(request.username(), request.email(), encodedPassword);
         User savedUser = userRepository.save(user);
@@ -58,7 +61,7 @@ public class UserService {
     public User login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email());
         if (user == null || !passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
         return user;
     }
