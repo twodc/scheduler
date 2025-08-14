@@ -33,7 +33,11 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public Page<SchedulesResponse> findAllPaged(Pageable pageable) {
-        return scheduleRepository.findAll(pageable).map(SchedulesResponse::from);
+        return scheduleRepository.findAll(pageable)
+                .map(schedule -> {
+                    long count = commentRepository.countByScheduleId(schedule.getId());
+                    return SchedulesResponse.from(schedule, count);
+                });
     }
 
     @Transactional(readOnly = true)

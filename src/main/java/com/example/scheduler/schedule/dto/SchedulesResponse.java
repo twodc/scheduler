@@ -9,17 +9,17 @@ public record SchedulesResponse(
         Long id,
         String title,
         String content,
-        int commentCount,
+        long commentCount,
         AuthorResponse author,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
-    public static SchedulesResponse from(Schedule schedule) {
+    public static SchedulesResponse from(Schedule schedule, long commentCount) {
         return new SchedulesResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
-                schedule.getComments().size(),
+                commentCount,
                 AuthorResponse.from(schedule.getUser()),
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt());
