@@ -6,6 +6,7 @@ import com.example.scheduler.user.dto.AuthorResponse;
 import java.time.LocalDateTime;
 
 public record SchedulesResponse(
+        Long id,
         String title,
         String content,
         int commentCount,
@@ -15,6 +16,7 @@ public record SchedulesResponse(
 ) {
     public static SchedulesResponse from(Schedule schedule) {
         return new SchedulesResponse(
+                schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getComments().size(),

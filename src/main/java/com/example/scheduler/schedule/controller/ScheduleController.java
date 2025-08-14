@@ -35,13 +35,12 @@ public class ScheduleController {
 
     // 일정 목록 조회
     @GetMapping
-    public ResponseEntity<List<SchedulesResponse>> getAll(
+    public ResponseEntity<Page<SchedulesResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedAt"));
-        Page<SchedulesResponse> pages = scheduleService.findAllPaged(pageable);
-        List<SchedulesResponse> schedules = pages.getContent();
+        Page<SchedulesResponse> schedules = scheduleService.findAllPaged(pageable);
         return ResponseEntity.ok(schedules);
     }
 
